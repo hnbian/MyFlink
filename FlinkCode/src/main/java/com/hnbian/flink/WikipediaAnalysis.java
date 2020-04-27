@@ -25,7 +25,7 @@ import java.util.Properties;
  */
 public class WikipediaAnalysis {
 
-    private static final String brokers = "node2.xy.com:6667,node3.xy.com:6667,node4.xy.com:6667";
+    private static final String brokers = "node2:6667,node3:6667,node4:6667";
     private static final String topic = "xy_bms_vehicle_pass_topic";
 
     public static void main(String[] args) {
