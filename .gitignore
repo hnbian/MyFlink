@@ -1,6 +1,7 @@
 # Compiled class file
 *.class
-/target
+/target/*
+FlinkCode/target/
 # Log file
 *.log
 .idea/*
