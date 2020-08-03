@@ -17,7 +17,7 @@
     </properties>
 
     <dependencies>
-        <!--    <dependency>
+            <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-java</artifactId>
                 <version>${flink.version}</version>
@@ -38,13 +38,13 @@
                 <version>${flink.version}</version>
             </dependency>
 
-            &lt;!&ndash;添加kafka依赖&ndash;&gt;
-            &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka-0.9 &ndash;&gt;
+            <!--添加kafka依赖-->
+             <!--https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka-0.9-->
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-connector-kafka-0.9_2.11</artifactId>
                 <version>${flink.version}</version>
-            </dependency>-->
+            </dependency>
 
 
     </dependencies>
