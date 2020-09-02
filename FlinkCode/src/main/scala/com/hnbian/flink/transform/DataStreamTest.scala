@@ -40,8 +40,7 @@ object DataStreamTest {
   def setMaxParallelism(env:StreamExecutionEnvironment): Unit ={
     val stream1:DataStream[Integer] = env.fromElements(1,2,3,4)
 
-    stream1.map(v=>v).setMaxParallelism(30000000)
-      .print("setMaxParallelism")
+    //stream1.map(v=>v).setMaxParallelism(30000000).print("setMaxParallelism")
   }
 
   def setParallelism(env:StreamExecutionEnvironment): Unit ={
