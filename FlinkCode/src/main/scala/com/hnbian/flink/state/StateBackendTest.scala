@@ -2,10 +2,13 @@ package com.hnbian.flink.state
 
 
 import java.util.concurrent.TimeUnit
+
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.common.time.Time
 import org.apache.flink.contrib.streaming.state.RocksDBStateBackend
+import org.apache.flink.runtime.state.StateBackend
 import org.apache.flink.runtime.state.filesystem.FsStateBackend
+import org.apache.flink.runtime.state.memory.MemoryStateBackend
 import org.apache.flink.streaming.api.scala._
 
 
@@ -16,11 +19,20 @@ import org.apache.flink.streaming.api.scala._
   **/
 object StateBackendTest {
   def main(args: Array[String]): Unit = {
-    val env = StreamExecutionEnvironment.getExecutionEnvironment val checkpointPath: String = ???
-    val backend = new RocksDBStateBackend(checkpointPath)
+    val env = StreamExecutionEnvironment.getExecutionEnvironment
+    val checkpointPath: String = "hdfs:///flink/checkpoints"
 
+    // RocksDBStateBackend
+    val backend:StateBackend = new RocksDBStateBackend(checkpointPath)
     env.setStateBackend(backend)
-    env.setStateBackend(new FsStateBackend("file:///tmp/checkpoints"))
+
+    // MemoryStateBackend
+    val memory:StateBackend = new MemoryStateBackend(true)
+    env.setStateBackend(memory)
+
+    // FsStateBackend
+    val  fsState:StateBackend = new FsStateBackend(checkpointPath)
+    env.setStateBackend(fsState)
 
     env.enableCheckpointing(1000)
     // 配置重启策略

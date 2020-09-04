@@ -45,19 +45,28 @@ object ValueStateTest {
 //    val stream4 = stream2.keyBy(_.id).flatMap(new TempChangeAlert(2.0))
 //    stream4.print("flatMap RichFlatMapFunction")
 
-
+    val threshold: Double = 2.0
 
     // 使用 flatMapWithState 实现检测两次的温度大于阈值则告警
      val stream5: DataStream[(String, Double, Double)]
      = stream2.keyBy(_.id)
+       // 定义输出类型(String, Double, Double) 与状态类型
        .flatMapWithState[(String, Double, Double), Double] {
-         case (in: SensorReading, None) =>
+         // 如果没有状态的话，也就是首次进入，将当前温度值存到状态
+         case (in: SensorReading, None) =>{
            (List.empty, Some(in.temperature))
-         case (r: SensorReading, lastTemp: Some[Double]) => val tempDiff = (r.temperature - lastTemp.get).abs if (tempDiff > 1.7) {
-           (List((r.id, r.temperature, tempDiff)), Some(r.temperature))
-         } else {
-           (List.empty, Some(r.temperature))
          }
+
+         // 如果有状态，则与当前温度与状态中的温度做比较
+         case (r: SensorReading, lastTemp: Some[Double]) =>{
+           val tempDiff = (r.temperature - lastTemp.get).abs
+           if (tempDiff > threshold) {
+             (List((r.id, r.temperature, tempDiff)), Some(r.temperature))
+           } else {
+             (List.empty, Some(r.temperature))
+           }
+         }
+
        }
 
     stream5.print()

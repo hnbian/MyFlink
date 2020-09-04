@@ -46,7 +46,6 @@ object KeyedProcessFunctionTest {
     processStream.print()
     env.execute()
   }
-
 }
 
 
