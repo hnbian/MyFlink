@@ -23,8 +23,9 @@ object TumblingTimeWIndow {
       Record(arr(0), arr(1), arr(2).toInt)
     })
 
-    // 取出 10 秒钟之内,每个 classId 年纪最小的用户
 
+
+    // 取出 10 秒钟之内,每个 classId 年纪最小的用户
     stream2.map(record=>{
       (record.classId,record.age)
     }).keyBy(_._1)
@@ -44,6 +45,9 @@ object TumblingTimeWIndow {
 1,xiaogang,14
 1,xiaogang,15
 2,xiaohuang,15
+
+1,xiaoming,121
+2,xiaodong,111
     */
 
     env.execute()
