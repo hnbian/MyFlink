@@ -1,6 +1,6 @@
 package com.hnbian.flink.state
 
-import com.hnbian.flink.process.SensorReading
+//import com.hnbian.flink.process.SensorReading
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.api.common.state.{ValueState, ValueStateDescriptor}
 import org.apache.flink.api.scala.typeutils.Types

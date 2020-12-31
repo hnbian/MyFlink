@@ -29,7 +29,7 @@ object SourceTestKafka {
     properties.setProperty("auto.offset.reset","latest")
 
 
-    val stream = env.addSource(new FlinkKafkaConsumer011[String](topic,new SimpleStringSchema(),properties))
+    val stream: DataStream[String] = env.addSource(new FlinkKafkaConsumer011[String](topic, new SimpleStringSchema(), properties))
 
     // flink 消费数据可以把消费数据的 offset 作为状态保存起来
     // 恢复数据时可以将 offset 设置为恢复数据的位置。

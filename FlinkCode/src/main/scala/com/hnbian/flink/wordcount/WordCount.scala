@@ -2,7 +2,6 @@ package com.hnbian.flink.wordcount
 
 import org.apache.flink.api.common.operators.Order
 import org.apache.flink.api.scala._
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 
 /**
   * @Author haonan.bian
@@ -11,10 +10,7 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
   **/
 object WordCount extends App {
 
-  val env = ExecutionEnvironment.getExecutionEnvironment
-
-
-
+  var env:ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
 
 
   val path = "/Users/hnbian/Documents/GitHub/FlinkCodes/FlinkCode/src/main/resources/words.txt"
@@ -22,7 +18,7 @@ object WordCount extends App {
   val intputDataSet = env.readTextFile(path)
 
   val list = intputDataSet.flatMap(_.toLowerCase.split(" "))
-    .filter(_.length >2)
+    .filter(_.length > 2)
     .map((_, 1))
     .groupBy(0)
     .sum(1)

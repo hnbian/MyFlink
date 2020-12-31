@@ -1,9 +1,7 @@
 package com.hnbian.flink.checkpoint
 
-import akka.remote.WireFormats.TimeUnit
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.common.time.Time
-import org.apache.flink.runtime.executiongraph.restart.RestartStrategy
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
@@ -35,18 +33,28 @@ object CheckPointTest {
     // 设置两次 checkpoint 最小时间间隔
     env.getCheckpointConfig.setMinPauseBetweenCheckpoints(5000)
 
-    // 开启 checkpoint 外部持久化，默认 job fail checkpoint 会被清理，RETAIN_ON_CANCELLATION 手动取消任务也需要保留 checkpoint
-    env.getCheckpointConfig.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
+    // 开启 checkpoint 外部持久化
+    // 默认 job fail checkpoint 会被清理，
+    // RETAIN_ON_CANCELLATION 手动取消任务也需要保留 checkpoint
+    env
+      .getCheckpointConfig
+      .enableExternalizedCheckpoints(
+        ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION
+      )
 
     // 设置重启策略
     // 出现故障之后，最多尝试重启 5 次 ,间隔 500 毫秒
-    env.setRestartStrategy(RestartStrategies.fixedDelayRestart(5,500))
+    env.setRestartStrategy(
+      RestartStrategies.fixedDelayRestart(5,500)
+    )
 
-    // 失败率重启
+    // 失败率重启方法
     // 失败率
     // 测量失败率的时间间隔
     // 重启时间间隔
-    env.setRestartStrategy(RestartStrategies.failureRateRestart(2,Time.seconds(300),Time.seconds(300)))
-
+    env.setRestartStrategy(
+      RestartStrategies
+        .failureRateRestart(2,Time.seconds(300),Time.seconds(300))
+    )
   }
 }

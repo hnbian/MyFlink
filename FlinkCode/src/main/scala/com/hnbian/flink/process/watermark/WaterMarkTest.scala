@@ -1,4 +1,4 @@
-package com.hnbian.flink.watermark
+package com.hnbian.flink.process.watermark
 
 import org.apache.flink.streaming.api.functions.{AssignerWithPeriodicWatermarks, AssignerWithPunctuatedWatermarks}
 import org.apache.flink.streaming.api.watermark.Watermark
