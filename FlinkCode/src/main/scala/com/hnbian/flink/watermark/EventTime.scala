@@ -1,4 +1,4 @@
-package com.hnbian.flink.process.watermark
+package com.hnbian.flink.watermark
 
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
@@ -17,6 +17,7 @@ object EventTime {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     // 设置使用事件时间
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
+
     //env.getConfig.setAutoWatermarkInterval(20) // 设置自动 WaterMark
     env.setParallelism(1)
 

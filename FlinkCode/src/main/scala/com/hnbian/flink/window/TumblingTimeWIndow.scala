@@ -1,7 +1,7 @@
 package com.hnbian.flink.window
 
 import org.apache.flink.streaming.api.windowing.time.Time
-
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
 /**
   * @Author haonan.bian
   * @Description 滚动时间窗口
@@ -10,6 +10,8 @@ import org.apache.flink.streaming.api.windowing.time.Time
 
 
 object TumblingTimeWIndow {
+  case class Record(classId:String,name:String,age:Int)
+
   def main(args: Array[String]): Unit = {
 
     import org.apache.flink.streaming.api.scala._
@@ -22,8 +24,6 @@ object TumblingTimeWIndow {
       val arr = data.split(",")
       Record(arr(0), arr(1), arr(2).toInt)
     })
-
-
 
     // 取出 10 秒钟之内,每个 classId 年纪最小的用户
     stream2.map(record=>{

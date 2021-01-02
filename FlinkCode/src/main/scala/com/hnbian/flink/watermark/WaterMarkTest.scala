@@ -1,6 +1,8 @@
-package com.hnbian.flink.process.watermark
+package com.hnbian.flink.watermark
 
+import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.{AssignerWithPeriodicWatermarks, AssignerWithPunctuatedWatermarks}
+import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.streaming.api.watermark.Watermark
 
 /**
@@ -9,6 +11,12 @@ import org.apache.flink.streaming.api.watermark.Watermark
   * @Date 2020/8/19 22:25 
   **/
 object WaterMarkTest {
+
+  // 初始化执行环境
+  private val environment: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+  environment.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
+  // 添加 socket source 获取数据
+  private val socketStream: DataStream[String] = environment.socketTextStream("localhost", 9999)
 
 }
 
@@ -38,23 +46,4 @@ class PeriodicAssiner extends AssignerWithPeriodicWatermarks[String] {
   }
 }
 
-// 按照自己的规则生成 WaterMark
-class PunctuatedAssigner extends AssignerWithPunctuatedWatermarks[String] {
 
-  /** 观察到的最大时间戳 */
-  val bound: Long = 60 * 1000
-
-  /**根据数据生成 WaterMark*/
-  override def checkAndGetNextWatermark(r: String, extractedTS: Long): Watermark = {
-    if (r != null) {
-      new Watermark(extractedTS - bound)
-    } else {
-      null
-    }
-  }
-
-  // 从数据中抽取时间戳的方式
-  override def extractTimestamp(r: String, previousTS: Long): Long = {
-    r.toLong
-  }
-}

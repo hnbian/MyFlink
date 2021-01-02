@@ -1,5 +1,6 @@
 package com.hnbian.flink.window
 
+import org.apache.flink.streaming.api.windowing.assigners.{DynamicProcessingTimeSessionWindows, SlidingEventTimeWindows}
 import org.apache.flink.streaming.api.windowing.time.Time
 
 /**
@@ -21,13 +22,28 @@ object SlidingTimeWindow {
       Record(arr(0), arr(1), arr(2).toInt)
     })
 
-    //  窗口时间 10 秒,每次滑动 5 秒 默认使用的是 processing time
+    // 使用.timeWindow 方式创建滑动时间窗口
+    // 窗口时间 10 秒,每次滑动 5 秒 默认使用的是 processing time
     stream2.map(record=>{
       (record.classId,record.age)
     }).keyBy(_._1)
       .timeWindow(Time.seconds(10),Time.seconds(5))
       .reduce((r1,r2)=>{(r1._1,r1._2.min(r2._2))})
       .print("minAge")
+
+    stream2.map(record=>{
+      (record.classId,record.age)
+    }).keyBy(_._1)
+      .window(SlidingEventTimeWindows.of(Time.seconds(10),Time.seconds(5)))
+      .reduce((r1,r2)=>{(r1._1,r2._2.min(r1._2))})
+
+
+    stream2.map(record=>{
+      (record.classId,record.age)
+    }).keyBy(_._1)
+      .window(SlidingEventTimeWindows.of(Time.seconds(10),Time.seconds(5)))
+
+
 
     env.execute()
   }
