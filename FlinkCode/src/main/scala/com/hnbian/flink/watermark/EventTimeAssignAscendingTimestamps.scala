@@ -1,5 +1,6 @@
 package com.hnbian.flink.watermark
 
+import com.hnbian.flink.common.Obj1
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.TimeCharacteristic
 /**
@@ -20,7 +21,6 @@ object EventTimeAssignAscendingTimestamps extends App{
     Obj1(dataArray(0),dataArray(1),dataArray(2).toLong)
   }).assignAscendingTimestamps(data=>{data.time}) // 设置时间语义中的时间戳字段（毫秒值）
 
-  stream.assignTimestamps()
+  //stream.assignTimestamps()
   env.execute()
 }
-case class Obj1(id:String,deviceName:String,time:Long)

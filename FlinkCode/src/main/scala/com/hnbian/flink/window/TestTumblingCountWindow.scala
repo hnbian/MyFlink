@@ -1,4 +1,5 @@
 package com.hnbian.flink.window
+import com.hnbian.flink.common.Record
 import org.apache.flink.streaming.api.scala._
 
 /**
@@ -7,7 +8,7 @@ import org.apache.flink.streaming.api.scala._
   * @Date 2020/8/15 23:41
   **/
 
-object TumblingCountWIndow {
+object TumblingCountWindow {
   def main(args: Array[String]): Unit = {
 
     // 创建执行环境
@@ -29,5 +30,4 @@ object TumblingCountWIndow {
       .print("minAge")
     env.execute()
   }
-
 }

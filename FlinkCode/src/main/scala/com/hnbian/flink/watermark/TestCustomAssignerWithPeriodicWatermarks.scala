@@ -1,5 +1,6 @@
 package com.hnbian.flink.watermark
 
+import com.hnbian.flink.common.Obj1
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks
 import org.apache.flink.streaming.api.watermark.Watermark
@@ -18,17 +19,15 @@ object TestCustomAssignerWithPeriodicWatermarks {
 
   val stream1: DataStream[String] = env.socketTextStream("localhost",9999)
 
-  val stream2: DataStream[Obj5] = stream1.map(data => {
+  val stream2: DataStream[Obj1] = stream1.map(data => {
     val arr = data.split(",")
-    Obj5(arr(0), arr(1).toLong)
+    Obj1(arr(0), arr(1), arr(2).toLong)
   }).assignTimestampsAndWatermarks(new CustomPeriodicAssiner)
   env.execute()
 }
 
-case class Obj5(id:String,time:Long)
-
 // 周期性生成 WaterMark
-class CustomPeriodicAssiner extends AssignerWithPeriodicWatermarks[Obj5] {
+class CustomPeriodicAssiner extends AssignerWithPeriodicWatermarks[Obj1] {
 
   /** 延迟时间为 1 分钟 */
   val bound: Long = 60 * 1000L
@@ -47,7 +46,7 @@ class CustomPeriodicAssiner extends AssignerWithPeriodicWatermarks[Obj5] {
     * @param previousElementTimestamp
     * @return
     */
-   def extractTimestamp(timeStamp: Obj5, previousElementTimestamp: Long): Long = {
+   def extractTimestamp(timeStamp: Obj1, previousElementTimestamp: Long): Long = {
     maxTs = previousElementTimestamp.max(timeStamp.time)
     timeStamp.time
   }

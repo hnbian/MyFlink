@@ -1,5 +1,6 @@
 package com.hnbian.flink.watermark
 
+import com.hnbian.flink.common.Obj1
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor
 /**
@@ -16,16 +17,14 @@ object TestAscendingTimestampExtractor extends App{
 
   val stream1: DataStream[String] = env.socketTextStream("localhost",9999)
 
-  val stream2: DataStream[Obj2] = stream1.map(data => {
+  val stream2: DataStream[Obj1] = stream1.map(data => {
     val arr = data.split(",")
-    Obj2(arr(0), arr(1).toLong)
-  }).assignTimestampsAndWatermarks(new AscendingTimestampExtractor[Obj2] {
-    override def extractAscendingTimestamp(element: Obj2) = {
+    Obj1(arr(0),arr(1), arr(2).toLong)
+  }).assignTimestampsAndWatermarks(new AscendingTimestampExtractor[Obj1] {
+    override def extractAscendingTimestamp(element: Obj1) = {
       // 提取当前的 EventTime，会设置当前的 EventTime 为 WaterMark
       element.time
     }
   })
   env.execute()
 }
-
-case class Obj2(id:String,time:Long)

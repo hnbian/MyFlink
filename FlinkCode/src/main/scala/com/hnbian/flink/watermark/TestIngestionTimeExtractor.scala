@@ -1,5 +1,6 @@
 package com.hnbian.flink.watermark
 
+import com.hnbian.flink.common.Obj1
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.IngestionTimeExtractor
 
@@ -17,11 +18,9 @@ object TestIngestionTimeExtractor extends App{
 
   val stream1: DataStream[String] = env.socketTextStream("localhost",9999)
 
-  val stream2: DataStream[Obj4] = stream1.map(data => {
+  val stream2: DataStream[Obj1] = stream1.map(data => {
     val arr = data.split(",")
-    Obj4(arr(0), arr(1).toLong)
-  }).assignTimestampsAndWatermarks(new IngestionTimeExtractor[Obj4])
+    Obj1(arr(0), arr(1), arr(2).toLong)
+  }).assignTimestampsAndWatermarks(new IngestionTimeExtractor[Obj1])
   env.execute()
 }
-
-case class Obj4(id:String,time:Long)

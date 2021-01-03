@@ -1,6 +1,7 @@
 package com.hnbian.flink.window
 
-import org.apache.flink.streaming.api.windowing.assigners.{DynamicProcessingTimeSessionWindows, SlidingEventTimeWindows}
+import com.hnbian.flink.common.Record
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
 
 /**
@@ -8,7 +9,7 @@ import org.apache.flink.streaming.api.windowing.time.Time
   * @Description 滑动时间窗口
   * @Date 2020/8/15 23:42 
   **/
-object SlidingTimeWindow {
+object TestSlidingTimeWindow {
   def main(args: Array[String]): Unit = {
 
     import org.apache.flink.streaming.api.scala._

@@ -9,7 +9,7 @@ import org.apache.flink.streaming.runtime.partitioner.KeyGroupStreamPartitioner
   * @Description //TODO
   * @Date 2020/9/17 14:18 
   **/
-object GlobanWindow {
+object GlobalWindow {
 
   def main(args: Array[String]): Unit = {
     // 创建执行环境

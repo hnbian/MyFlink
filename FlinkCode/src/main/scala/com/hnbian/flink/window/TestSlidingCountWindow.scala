@@ -1,11 +1,13 @@
 package com.hnbian.flink.window
 
+import com.hnbian.flink.common.Record
+
 /**
   * @Author haonan.bian
   * @Description 滑动计数窗口
   * @Date 2020/8/15 23:41 
   **/
-object SlidingCountWindow {
+object TestSlidingCountWindow {
   def main(args: Array[String]): Unit = {
 
     import org.apache.flink.streaming.api.scala._

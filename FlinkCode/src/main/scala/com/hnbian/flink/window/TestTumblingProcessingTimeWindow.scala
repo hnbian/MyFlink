@@ -1,5 +1,6 @@
 package com.hnbian.flink.window
 
+import com.hnbian.flink.common.{MinDataReduceFunction, Obj1}
 import org.apache.flink.api.common.functions.ReduceFunction
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
@@ -16,26 +17,20 @@ object TumblingProcessingTimeWindow extends App{
 
   val stream1: DataStream[String] = environment.socketTextStream("localhost",9999)
 
-  val stream2: DataStream[Record] = stream1.map(data => {
+  val stream2: DataStream[Obj1] = stream1.map(data => {
     val arr = data.split(",")
-    Record(arr(0), arr(1), arr(2).toInt)
+    Obj1(arr(0), arr(1), arr(2).toInt)
   })
 
   // 设置一个窗口时间是 10 秒的窗口
   stream2.keyBy(0).window(TumblingProcessingTimeWindows.of(Time.seconds(10)))
-    .reduce(new minAgeFunction)
+    .reduce(new MinDataReduceFunction)
     .print()
 
+  /**
+    * 1,xx,14
+    * 2,ww,15
+    * 3,dd,12
+    */
   environment.execute()
-}
-
-// 计算窗口内年纪最小的记录
-class minAgeFunction extends ReduceFunction[Record]{
-  override def reduce(r1: Record, r2: Record):Record = {
-    if(r1.age < r2.age){
-      r1
-    }else{
-      r2
-    }
-  }
 }
