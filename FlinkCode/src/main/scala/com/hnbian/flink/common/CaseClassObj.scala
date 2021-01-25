@@ -4,6 +4,11 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 
 case class Record(classId:String,name:String,age:Int)
 
+/**
+  * 1,小明,15
+  * 2,小红,10
+  */
+
 case class Obj1(id:String,name:String,time:Long)
 
 /**
