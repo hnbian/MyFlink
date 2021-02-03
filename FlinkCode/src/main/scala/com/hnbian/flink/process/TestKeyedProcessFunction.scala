@@ -16,13 +16,15 @@ object TestKeyedProcessFunction extends App {
   val env = StreamExecutionEnvironment.getExecutionEnvironment
   val stream1: DataStream[String] = env.socketTextStream("localhost",9999)
 
-  stream1
+  private val value: DataStream[Obj1] = stream1
     .map(data => {
       val arr = data.split(",")
       Obj1(arr(0), arr(1), arr(2).toLong)
     })
-    .keyBy(_.id)
-    .process(new CustomKeyedProcessFunction)
+  private val value1: KeyedStream[Obj1, String] = value.keyBy(_.id)
+
+
+  value1.process(new CustomKeyedProcessFunction)
     .print("TestKeyedProcessFunction")
   env.execute()
 }
