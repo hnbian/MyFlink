@@ -23,19 +23,24 @@ object TestCoProcessFunction extends App {
       Obj1(arr(0), arr(1), arr(2).toLong)
     })
 
-  val stream2Rec: DataStream[Record] = stream2.map(data => {
+  val stream2Record: DataStream[Record] = stream2.map(data => {
     val arr = data.split(",")
     Record(arr(0), arr(1), arr(2).toInt)
   })
 
   stream1Obj
-    .connect(stream2Rec)
+    .connect(stream2Record)
     .process(new CustomCoProcessFunction)
     .print()
 
   env.execute()
 }
 
+/**
+  * 第一个流输入类型为 Obj1
+  * 第二个流输入类型为 Record
+  * 返回类型为 String
+  */
 class CustomCoProcessFunction extends CoProcessFunction[Obj1,Record,String]{
   override def processElement1(value: Obj1, ctx: CoProcessFunction[Obj1, Record, String]#Context, out: Collector[String]): Unit = {
     out.collect(s"processElement1:${value.name},${value.getClass}")
