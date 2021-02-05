@@ -110,6 +110,8 @@ class TempIncreaseAlertFunction extends KeyedProcessFunction[String, SensorReadi
   override def onTimer(ts: Long,
                        ctx: KeyedProcessFunction[String, SensorReading, String]#OnTimerContext,
                        out: Collector[String]): Unit = {
+
+    ctx.timerService()
     out.collect("传感器 id 为: " + ctx.getCurrentKey + "的传感器温度值已经连续 1s 上升了。")
     currentTimer.clear()
   }
