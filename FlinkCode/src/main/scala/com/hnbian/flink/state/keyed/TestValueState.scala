@@ -26,28 +26,28 @@ object TestValueState extends App {
   private val value1: KeyedStream[Obj1, String] = value.keyBy(_.id)
 
   value1
-    .process(new CustomValueState)
-    .print("TestKeyedProcessFunction")
+    .process(new TestValueState)
+    .print("TestValueState")
   env.execute()
 }
 
-class CustomValueState extends KeyedProcessFunction[String, Obj1, String]{
+class TestValueState extends KeyedProcessFunction[String, Obj1, String]{
   // 定义状态描述符
-  val descriptor = new ValueStateDescriptor[Obj1]("objs", Types.of[Obj1])
-  lazy val state: ValueState[Obj1] = getRuntimeContext.getState(descriptor)
+  val valueStateDescriptor = new ValueStateDescriptor[Obj1]("objs", Types.of[Obj1])
+  lazy val valueState: ValueState[Obj1] = getRuntimeContext.getState(valueStateDescriptor)
 
   override def processElement(value: Obj1, ctx: KeyedProcessFunction[String, Obj1, String]#Context, out: Collector[String]) = {
-    val prev = state.value()
+    val prev = valueState.value()
     if (null  ==  prev){
       // 更新状态
-      state.update(value)
+      valueState.update(value)
     }else{
       // 获取状态
-      val obj1 = state.value()
+      val obj1 = valueState.value()
       println(s"obj1.time=${obj1.time},value.time=${value.time}")
       if (obj1.time < value.time){
         // 如果 最新数据时间 大于之前时间，更新状态
-        state.update(value)
+        valueState.update(value)
       }
     }
     out.collect(value.name)
