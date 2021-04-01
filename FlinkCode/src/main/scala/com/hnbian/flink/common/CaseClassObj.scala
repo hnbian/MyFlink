@@ -17,8 +17,12 @@ case class Class(id:String,name:String)
 case class Record(classId:String,name:String,age:Int)
 
 /**
-1,小明,15
-2,小红,10
+1,小明,20
+1,小红1,20
+1,小红2,20
+1,小明3,20
+1,小红4,20
+1,小红5,20
   */
 
 

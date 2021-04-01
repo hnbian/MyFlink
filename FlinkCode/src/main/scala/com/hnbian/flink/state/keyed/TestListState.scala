@@ -38,7 +38,7 @@ object TestListState extends App {
 class TestListState extends KeyedProcessFunction[String, Obj1, String]{
 
   // 定义状态描述符
-  val listStateDescriptor = new ListStateDescriptor[Obj1]("objs", Types.of[Obj1])
+  val listStateDescriptor:ListStateDescriptor[Obj1] = new ListStateDescriptor[Obj1]("objs", Types.of[Obj1])
 
   private lazy val listState: ListState[Obj1] = getRuntimeContext.getListState(listStateDescriptor)
 

@@ -1,10 +1,19 @@
 package com.hnbian.flink.checkpoint
 
+import com.hnbian.flink.common.Obj1
+import com.hnbian.flink.state.backend.TestFsStateBackend
+import com.hnbian.flink.state.backend.TestFsStateBackend.{env, stateBackend}
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
+import org.apache.flink.api.common.state.{ValueState, ValueStateDescriptor}
 import org.apache.flink.api.common.time.Time
+import org.apache.flink.api.scala.createTypeInformation
+import org.apache.flink.api.scala.typeutils.Types
+import org.apache.flink.runtime.state.filesystem.FsStateBackend
 import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.flink.streaming.api.functions.KeyedProcessFunction
+import org.apache.flink.streaming.api.scala.{DataStream, KeyedStream, StreamExecutionEnvironment}
+import org.apache.flink.util.Collector
 
 /**
   * @Author haonan.bian
@@ -14,6 +23,7 @@ import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 object CheckPointTest {
   def main(args: Array[String]): Unit = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
+
 
     // 启动 checkpoint 并设置时间间隔为 1000 毫秒  = 1 秒
     env.enableCheckpointing(1000)
@@ -56,5 +66,47 @@ object CheckPointTest {
       RestartStrategies
         .failureRateRestart(2,Time.seconds(300),Time.seconds(300))
     )
+
+    // 使用文件存储状态
+    val stateBackend = new FsStateBackend("file:///opt/flink-1.10.2/checkpoint",true)
+
+    env.setStateBackend(stateBackend)
+
+    val stream1: DataStream[String] = env.socketTextStream("localhost",9999)
+
+    val value: DataStream[Obj1] = stream1
+      .map(data => {
+        val arr = data.split(",")
+        Obj1(arr(0), arr(1), arr(2).toLong)
+      })
+    val value1: KeyedStream[Obj1, String] = value.keyBy(_.id)
+
+    value1
+      .process(new CheckPointTest)
+      .print("CheckPointTest")
+    env.execute()
+
+  }
+}
+class CheckPointTest extends KeyedProcessFunction[String, Obj1, String]{
+  // 定义状态描述符
+  val valueStateDescriptor = new ValueStateDescriptor[Obj1]("objs", Types.of[Obj1])
+  lazy val valueState: ValueState[Obj1] = getRuntimeContext.getState(valueStateDescriptor)
+
+  override def processElement(value: Obj1, ctx: KeyedProcessFunction[String, Obj1, String]#Context, out: Collector[String]) = {
+    val prev = valueState.value()
+    if (null  ==  prev){
+      // 更新状态
+      valueState.update(value)
+    }else{
+      // 获取状态
+      val obj1 = valueState.value()
+      println(s"obj1.time=${obj1.time},value.time=${value.time}")
+      if (obj1.time < value.time){
+        // 如果 最新数据时间 大于之前时间，更新状态
+        valueState.update(value)
+      }
+    }
+    out.collect(value.name)
   }
 }

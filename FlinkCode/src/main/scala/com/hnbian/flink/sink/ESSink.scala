@@ -26,12 +26,9 @@ object ESSink {
 
     val stream = env.readTextFile("/opt/apache-maven-3.6.0/conf/settings.xml")
 
-
-
     val httpHosts = new util.ArrayList[HttpHost]()
 
     httpHosts.add(new HttpHost("node1",9200))
-
 
     // 创建 es sink 的 builder
     val esSinkBuilder  = new ElasticsearchSink.Builder[String](
@@ -56,7 +53,6 @@ object ESSink {
             .source(map)
 
           // 使用 requestIndexer 发送 HTTP 请求保存数据
-
           requestIndexer.add(indesRequest)
         }
       })
