@@ -36,7 +36,7 @@ object CepContiguityStrictTest  extends App {
   // 2. 定义一个 Pattern
   private val pattern: Pattern[Record, Record] = Pattern
     .begin[Record]("start").where(_.age == 20)
-    // 定义严格近邻模式，age 为 20 的记录后必须跟 classId 为 2 的记录才会匹配
+    // 定义严格近邻模式，age 为 20 的记录后必须紧跟 classId 为 2 的记录才会匹配
     .next("next").where(_.classId == "2")
 /**
 1,小红0,20 》 匹配 1
