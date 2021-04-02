@@ -38,8 +38,8 @@ object CepContiguityStrictTest  extends App {
     .begin[Record]("start").where(_.age == 20)
     // 定义严格近邻模式，age 为 20 的记录后必须紧跟 classId 为 2 的记录才会匹配
     .next("next").where(_.classId == "2")
-/**
-1,小红0,20 》 匹配 1
+  /**
+  1,小红0,20 》 匹配 1
 2,xx,100 》 匹配 1
             CepContiguityStrictTest:6> Record(1,小红0,20),Record(2,xx,100)
 1,小红1,20 》未匹配
@@ -50,7 +50,7 @@ object CepContiguityStrictTest  extends App {
 1,小红5,20 》 匹配 2
 2,xx,300 》 匹配 2
         CepContiguityStrictTest:7> Record(1,小红5,20),Record(2,xx,300)
-*/
+    */
 
   //#########################################################
   //#########################################################
