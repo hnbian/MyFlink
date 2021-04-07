@@ -32,7 +32,7 @@ object CepSelectFunctionOutTimeTest  extends App {
   // 3. 将创建好的 Pattern 应用到输入事件流上
   private val patternStream: PatternStream[Record] = CEP.pattern[Record](recordStream, pattern)
 
-  //创建OutputTag,并命名为timeout-output
+  // 创建OutputTag,并命名为timeout-output
   val timeoutTag = OutputTag[String]("timeout-output")
 
   // 4. 获取事件序列，得到匹配到的数据
@@ -45,7 +45,7 @@ object CepSelectFunctionOutTimeTest  extends App {
 
 }
 
-// 自定义正常支付事件序列处理函数
+// 自定义正常事件序列处理函数
 class SelectFunction2() extends PatternSelectFunction[Record,String] {
   override def select(pattern: util.Map[String, util.List[Record]]): String = {
     val start: Record = pattern.get("start").iterator().next()
