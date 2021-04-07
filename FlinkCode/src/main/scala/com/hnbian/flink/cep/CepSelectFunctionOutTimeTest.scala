@@ -8,7 +8,7 @@ import org.apache.flink.cep.scala.pattern.Pattern
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.time.Time
 
-object CepSelectFunctionFlatOutTimeTest  extends App {
+object CepSelectFunctionOutTimeTest  extends App {
 
   // 创建执行环境
   val env = StreamExecutionEnvironment.getExecutionEnvironment
