@@ -12,7 +12,7 @@ import org.apache.flink.streaming.api.scala._
   * @Description //TODO
   * @Date 2021/4/1 11:49 
   * */
-object CepSelectFuncitonTest  extends App {
+object CepSelectFunctionTest  extends App {
 
   // 创建执行环境
   val env = StreamExecutionEnvironment.getExecutionEnvironment
@@ -45,7 +45,7 @@ object CepSelectFuncitonTest  extends App {
   private val result: DataStream[String] = patternStream.select(new selectFunction)
 
 
-  result.print("CepSelectFuncitonTest")
+  result.print("CepSelectFunctionTest")
 
   env.execute()
 
