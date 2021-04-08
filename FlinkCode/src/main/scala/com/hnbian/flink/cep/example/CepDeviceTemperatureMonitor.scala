@@ -29,11 +29,16 @@ object CepDeviceTemperatureMonitor extends App{
   // 2. 接受数据
   val sourceStream: DataStream[String] = environment.socketTextStream("localhost",9999)
 
-  val deviceStream: KeyedStream[DeviceDetail, String] = sourceStream.map(x => {
+  val deviceStream: KeyedStream[DeviceDetail, String] = sourceStream.map(
+    x => {
     val strings: Array[String] = x.split(",")
     DeviceDetail(strings(0), strings(1), strings(2), strings(3), strings(4), strings(5))
-  }).assignAscendingTimestamps(x =>{format.parse(x.date).getTime})
-    .keyBy(x => x.sensorMac)
+    }
+  ).assignAscendingTimestamps(
+    x =>{
+      format.parse(x.date).getTime
+    }
+  ).keyBy(x => x.sensorMac)
 
 
   // 3. 定义Pattern,指定相关条件和模型序列
@@ -41,7 +46,7 @@ object CepDeviceTemperatureMonitor extends App{
     Pattern
       .begin[DeviceDetail]("start")
       .where(x =>x.temperature.toInt >= 40)
-      .timesOrMore(3)
+      .timesOrMore(3).greedy
       .within(Time.minutes(3))
 
   // 4. 模式检测，将模式应用到流中
